@@ -1,0 +1,8 @@
+1: create a new npm project with a template engine
+
+2: add two routes:
+	. / route to hold a form that allows users to input their name...
+	handle the incoming input and store it in a array
+	. /users route that outputs all the users in the array or some error text
+
+3 make sure to use layouts/partials or includes in your project
