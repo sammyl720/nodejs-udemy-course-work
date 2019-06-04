@@ -1,0 +1,4 @@
+1 create an npm project with express
+2 create two routes each serving an html file
+
+3 add some static css or js file to atleast one of the html files
