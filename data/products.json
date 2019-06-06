@@ -1,1 +1,15 @@
-[{"title":"Title"},{"title":"Book"},{"title":"Dummy Text For Lay Out"},{"title":"Dummy Text For Lay Out"}]
+[{
+        "title": "Title",
+        "imageUrl": "https://source.unsplash.com/user/erondu",
+        "description": "Short description",
+        "price": "12",
+        "id": "2332"
+    },
+    {
+        "title": "Another Product",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-product-3_large.png?v=1530129341",
+        "description": "Nice pair off glassess!",
+        "price": "29.95",
+        "id": "0.14641629704246228"
+    }
+]
