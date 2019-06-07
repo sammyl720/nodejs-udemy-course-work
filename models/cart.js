@@ -39,5 +39,14 @@ module.exports = class Cart {
     
     
   }
+  // static deleteProduct(id, prodPrice){
+  //   fs.readFile(p, (err, fileContent)=>{
+  //     if(err){
+  //         return;
+  //     }
+  //     // const updatedCart = {...cart};
+  //     // cart.totalPrice 
+  //   })
+  // }
 
 }
