@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require("body-parser");
-const db = require('./util/database');
+const sequelize = require('./util/database');
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
 const path =require('path');
@@ -21,6 +21,15 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-app.listen(port, ()=>{
-  console.log(`Server started on port ${port}`);
+sequelize.sync()
+.then(result => {
+  //console.log(result)
+  app.listen(port, ()=>{
+    console.log(`Server started on port ${port}`);
+  })
 })
+.catch(err => {
+  console.log(err)
+});
+
+
