@@ -1,4 +1,5 @@
 <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/cart.css">
     </head>
 
     <body>
@@ -6,19 +7,28 @@
 
             <main>
                 <% if(products.length > 0){ %>
-                    <ul>
+                    <ul class="cart-list">
                         <% products.forEach(p => { %>
-                            <li>
-                                <p>
-                                    <%= p.productData.title %> (
-                                        <%= p.qty %>)
-                                            <form action="/cart-delete-item" method="POST">
-                                                <input type="hidden" value="<%= p.productData.id %>" name="productId"> <button class="btn" type="submit">Delete</button>
-                                            </form>
-                                </p>
+                            <li class='cart-list__item'>
+
+                                <span class="cart-list__item-title"><%= p.title %></span>
+                                <span class="cart-list__item-qty">
+                                    Quantity: <%= p.cartItem.quantity %></span>
+                                <form action="/cart-delete-item" method="POST">
+                                    <input type="hidden" value="<%= p.id %>" name="productId"> <button class="btn btn-warning" type="submit">Delete</button>
+                                </form>
+
                             </li>
                             <% }) %>
                     </ul>
+                    <br>
+                    <div class="centered">
+                        <form action="/create-order" method="POST">
+                            <button type="submit" class="btn">
+                                    Order Now!
+                                </button>
+                        </form>
+                    </div>
                     <% }else{ %>
                         <h1> No Products in Cart </h1>
                         <% } %>
