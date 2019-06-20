@@ -12,7 +12,7 @@ The code should more or less match the code in the course - with some minor disc
   * Delete a Product
 
 At this point the transition from Mysql to MongoDb is only
-partialy complete[^1]. Some parts of this app will not work
+partialy complete [^1] . Some parts of this app will not work
 
 [^1]: Still have to add cart, order and user to database
 
