@@ -1,12 +1,13 @@
 // connect to mongoDb
 const mongoDb = require('mongodb');
 const mongoClient = mongoDb.MongoClient;
+require('dotenv').config()
 
 let _db;
 const mongoConnect = (callback) => {
   //connect to mongoDb using these credentails
   
-  mongoClient.connect('mongodb+srv://samuel:YgNzAxSKUYb9a00v@cluster0-bkybb.mongodb.net/shop?retryWrites=true&w=majority', { useNewUrlParser: true })
+  mongoClient.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 
   .then(client => {
     console.log('connected');
