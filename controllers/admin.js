@@ -5,7 +5,7 @@ exports.getAddProduct = (req,res,next)=>{
   res.render("admin/edit-product",{
     pageTitle: "Add Product",
     path: '/admin/add-product',
-    isAuthenticated: req.isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
     editing:false
   });
 }
@@ -84,6 +84,7 @@ exports.postAddProduct =  (req, res, next)=>{
 }
 
 exports.getProducts = (req,res)=>{
+  console.log(req.user);
   Product.find()
   // .select('title price -_id')// select which content you want to retreive
   // .populate('userId', 'name') // retrieve/populate data through the ObjectID/reference

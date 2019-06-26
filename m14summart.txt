@@ -1,0 +1,23 @@
+Cookies are great for storing data in client
+
+do not store sensitive data on cookie
+it can be accessed and manipulated by client / browser
+
+
+cookies can bet configured to expire when the browser closes (Session Cookie)
+or when a age / expire date is reached (permanent Cookie)
+
+Works well together with sessions...
+
+
+
+Session are stored on the server not on the client
+
+sessions are great for storing data that should survive across requests
+
+You can store anything in sessions .
+Often it is used for storing user data / authentication status
+
+Session are identified via Cookie
+
+You can use different storages for saving your sessions on server - mongoDb, mysql, redis etc..

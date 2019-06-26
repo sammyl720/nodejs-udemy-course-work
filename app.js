@@ -34,9 +34,12 @@ app.use(session({
 );
 
 app.use((req,res,next) => {
-    User.findById('5d101735dfc83446b832a027')
+    if(!req.session.user){
+      return next();
+    }
+    User.findById(req.session.user._id)
     .then(user => {
-      console.log(user);
+      // console.log(user);
       req.user = user;
       next();
     })
@@ -45,6 +48,8 @@ app.use((req,res,next) => {
     });
 
 });
+
+
 
 app.use("/admin",adminRoutes);
 app.use(shopRoutes);
