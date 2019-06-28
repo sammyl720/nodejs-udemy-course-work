@@ -9,7 +9,6 @@ exports.getProducts = (req,res,next)=>{
     res.render("shop/product-list", {
       products:products,
       pageTitle: "Shop",
-      isAuthenticated: req.session.isLoggedIn,
       path: '/products'
     });
   })
@@ -26,7 +25,6 @@ exports.getProduct = (req,res,next) =>{
     res.render('shop/product-detail',{
       product:product,
       pageTitle:product.title,
-      isAuthenticated: req.session.isLoggedIn,
 
       path: "/products"
 
@@ -39,10 +37,9 @@ exports.getProduct = (req,res,next) =>{
 exports.getIndex = (req,res)=>{
   Product.find()
   .then(products => {
-    console.log(req.session.isLoggedIn)
+    // console.log(req.session.isLoggedIn)
     res.render("shop/product-list", {
-      products:products,
-      isAuthenticated: req.session.isLoggedIn,
+      products:products,   
       pageTitle: "Shop",
       path: '/'
     });
@@ -66,8 +63,6 @@ exports.getCart = (req,res, next) =>{
       res.render('shop/cart',{
         path:'/cart',
         pageTitle: "Your Cart",
-      isAuthenticated: req.session.isLoggedIn,
-
         products: products
     
       });
@@ -110,7 +105,7 @@ exports.postOrder = (req,res,next) => {
       });
       const order = new Order({
         user: {
-          name: req.user.name,
+          email: req.user.email,
           userId: req.user
         },
         products: products
@@ -136,7 +131,6 @@ exports.getOrders = (req,res,next) => {
     res.render('shop/orders',{
       path: "/orders",
       pageTitle: "Your Orders",
-      isAuthenticated: req.session.isLoggedIn,
       orders: orders
     })
   })

@@ -1,0 +1,7 @@
+when user logs in, store the user from user collection in the session
+
+Then adjust the controllers that use The user data to use the the data from session (req.user.session).
+
+
+
+

@@ -2,6 +2,9 @@ const Product = require('../models/product')
 const mongoDb = require('mongodb');
 
 exports.getAddProduct = (req,res,next)=>{
+  if(!req.session.isLoggedIn){
+    return res.redirect('/login');
+  }
   res.render("admin/edit-product",{
     pageTitle: "Add Product",
     path: '/admin/add-product',
@@ -51,12 +54,12 @@ exports.getEditProduct = (req,res,next)=>{
     res.render("admin/edit-product",{
       pageTitle: "Edit Product",
       path: '/admin/edit-product',
-      isAuthenticated: req.isLoggedIn,
+      isAuthenticated: req.session.isLoggedIn,
       editing: editMode,
       product:product
     });
   }).catch(err => {
-    console.log(err);
+    // console.log(err);
   }) 
 }
 exports.postAddProduct =  (req, res, next)=>{
@@ -93,7 +96,7 @@ exports.getProducts = (req,res)=>{
     res.render('admin/products', {
       products: products,
       path: "/admin/products",
-      isAuthenticated: req.isLoggedIn,
+      isAuthenticated: req.session.isLoggedIn,
       pageTitle: "Admin products"
     });
   }).catch(err => {

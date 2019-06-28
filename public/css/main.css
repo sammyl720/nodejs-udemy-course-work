@@ -211,6 +211,22 @@ image img {
     color: white;
 }
 
+.user-message {
+    text-align: center;
+    margin: auto;
+    padding: .5rem;
+    border-radius: 3px;
+    width: 90%;
+    border: 1px solid #4771fa;
+    background-color: #6e7caa;
+}
+
+.user-message--error {
+    border-color: red;
+    background: rgba(231, 115, 115, 0.562);
+    color: red;
+}
+
 @media (min-width: 768px) {
     .main-header__nav {
         display: flex;
@@ -219,5 +235,8 @@ image img {
     }
     #side-menu-toggle {
         display: none;
+    }
+    .user-message {
+        width: 30rem;
     }
 }

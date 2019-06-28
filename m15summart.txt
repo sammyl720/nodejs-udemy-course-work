@@ -1,0 +1,17 @@
+Authentication
+. Authentication means that not every visitor of the page can view or interact with everthing
+
+
+. authentication has to happen on the servre side and up on session
+
+
+. you can protect routes by checking session controlled log in status right before a controller authentication
+
+Security & UX
+
+. Password should be stored in a hashed form
+
+. CSRF attacks are a real issue and you should therefore include CSRF protection
+in any application you build
+
+. for a better user expeirence, you can flash data / messages into session the which you can display in the views
