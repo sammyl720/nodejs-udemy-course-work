@@ -4,11 +4,18 @@ const Order = require('../models/order')
 
 exports.getProducts = (req,res,next)=>{
   // console.log(req.user._id);
+  let message = req.flash('success');
+  if(message[0]){
+    message = message[0];
+  }else{
+    message = null;
+  }
   Product.find()
   .then(products => {
     res.render("shop/product-list", {
       products:products,
       pageTitle: "Shop",
+      message:message,
       path: '/products'
     });
   })
@@ -35,12 +42,19 @@ exports.getProduct = (req,res,next) =>{
 }
 
 exports.getIndex = (req,res)=>{
+  let message = req.flash('success');
+  if(message[0]){
+    message = message[0];
+  }else{
+    message = null;
+  }
   Product.find()
   .then(products => {
     // console.log(req.session.isLoggedIn)
     res.render("shop/product-list", {
       products:products,   
       pageTitle: "Shop",
+      message: message,
       path: '/'
     });
   })
@@ -58,7 +72,7 @@ exports.getCart = (req,res, next) =>{
     .populate('cart.items.productId')
     .execPopulate()
     .then(user => {
-      console.log(user.cart.items);
+      // console.log(user.cart.items);
       const products = user.cart.items;
       res.render('shop/cart',{
         path:'/cart',

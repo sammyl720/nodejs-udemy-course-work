@@ -1,0 +1,17 @@
+Module Summary
+
+Password Resetting
+
+password resetting has to be implemented 
+in a way that prevents users from reseting passwords of random user account
+
+Reset Tokens have to be random, unguessable and unique
+
+
+Authorization
+
+Authorization is an important part if pretty much every app
+
+Not every authenticated user should be able to everything
+
+Instead, you want to lock down access by restricting the permissions of your users

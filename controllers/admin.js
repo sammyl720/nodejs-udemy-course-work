@@ -22,16 +22,18 @@ exports.postEditProduct = (req,res,next)=>{
   // const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedImage, prodId, null, req.user._id)
   Product.findById(prodId)
   .then(product => {
+    if(product.userId.toString() !== req.user._id.toString()){
+      return res.redirect('/');
+    }
     product.title = updatedTitle;
     product.price = updatedPrice;
     product.description = updatedDesc;
     product.imageUrl = updatedImage;
-    return product.save()
+    return product.save().then(result => {
+      console.log("updated Product");
+      res.redirect('/products');
+    });
   }) 
-  .then(result => {
-    console.log("updated Product");
-    res.redirect('/products');
-  })
   .catch(err =>{
     console.log(err);
   })
@@ -87,12 +89,12 @@ exports.postAddProduct =  (req, res, next)=>{
 }
 
 exports.getProducts = (req,res)=>{
-  console.log(req.user);
-  Product.find()
+  // console.log(req.user);
+  Product.find({userId:req.user._id})
   // .select('title price -_id')// select which content you want to retreive
   // .populate('userId', 'name') // retrieve/populate data through the ObjectID/reference
   .then(products => {
-    console.log(products);
+    // console.log(products);
     res.render('admin/products', {
       products: products,
       path: "/admin/products",
@@ -105,8 +107,9 @@ exports.getProducts = (req,res)=>{
 }
 exports.postDeleteProduct = (req,res,next)=>{
   const prodId = req.body.prodId;
-  Product.findByIdAndRemove(prodId, {
-    useFindAndModify:false
+  Product.deleteOne({
+    _id:prodId,
+    userId:req.user._id
   })
   .then(result => {
     console.log('Deleted')
