@@ -4,6 +4,7 @@ require('dotenv').config();
 const User = require('../models/user');
 const nodemailer = require('nodemailer')
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const { validationResult } = require('express-validator');
 
 const transporter = nodemailer.createTransport(sendgridTransport({
   auth: {
@@ -84,19 +85,17 @@ exports.postSignup = (req,res,next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-  if(password !== confirmPassword){
-    req.flash('error', "Passwords do not match.");
-    console.log("Passwords do not match");
-    return res.redirect('/signup');
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    // console.log(errors.array());
+    return res.status(422).render('auth/signup',{
+      path: "/signup",
+      pageTitle: "Sign up",
+      errorMessage: errors.array()[0].msg
+    })
   }
-  User.findOne({email:email})
-  .then(userDoc => {
-    if(userDoc){
-      console.log("Email is taken");
-      req.flash('error', "There is an account associated with this email already.");
-      return res.redirect('/signup');
-    }
-    return bcrypt.hash(password, 12).then(hashedPassword => {
+  
+    bcrypt.hash(password, 12).then(hashedPassword => {
       const user = new User({
         email:email,
         password:hashedPassword,
@@ -114,11 +113,6 @@ exports.postSignup = (req,res,next) => {
       }); 
     })
     .catch(err => console.log(err));
-    
-  })
-  .catch(err => console.log("my error:" + err));
-
-  
 };
 
 exports.getReset = (req,res,next) => {
