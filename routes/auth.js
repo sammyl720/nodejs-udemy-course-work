@@ -6,7 +6,17 @@ const router = express.Router();
 
 router.get('/login', authController.getLogin);
 
-router.post('/login', authController.postLogin);
+router.post('/login',
+  [check('email')
+  .isEmail()
+  .withMessage('Please enter a valid email')
+  .normalizeEmail(),
+  check('password', 'Password must be at least five characters with letters and numbers')
+  .isLength({min:5})
+  .isAlphanumeric()
+  .trim()
+],
+ authController.postLogin);
 
 router.get('/signup', authController.getSignup);
 
@@ -15,27 +25,29 @@ router.post('/signup',
  .isEmail()
  .withMessage('Please enter a valid email.')
  .custom((value, {req}) => {
-  //  if(value === 'test@test.com'){
-  //    throw new Error('This email address is forbidden');
-  //  }
-  //  return true;
+   if(value === 'test@test.com'){
+     throw new Error('This email address is forbidden');
+   }
   return User.findOne({email:value})
   .then(userDoc => {
     if(userDoc){
       return Promise.reject("There is an account associated with this email already.");
     }
   });
- }),
+ }).normalizeEmail(),
  body('password', "Please enter a password with only numbers and letters and at least 5 characters long")
  .isLength({min:5})
- .isAlphanumeric(),
+ .isAlphanumeric()
+ .trim(),
  body('confirmPassword')
+ .isLength({min:5})
+ .isAlphanumeric()
  .custom((value, {req}) => {
    if(value !== req.body.password){
      throw new Error('Passwords have to Match')
    }
    return true;
- })
+ }).trim()
 ]
   ,authController.postSignup);
 
