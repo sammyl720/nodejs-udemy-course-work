@@ -54,7 +54,6 @@ app.use((req,res,next) => {
     }
     User.findById(req.session.user._id)
     .then(user => {
-      // console.log(user);
       if(!user){
         return next()
       }
@@ -62,7 +61,7 @@ app.use((req,res,next) => {
       next();
     })
     .catch(err =>{
-      throw new Error(err);
+      next(new Error(err));
     });
 
 });
@@ -78,7 +77,12 @@ app.get("/500", errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req,res,next) => {
-    res.redirect('/500');
+  res.status(500).render("500", {
+    pageTitle: "Error",
+    isAuthenticated: req.session.isLoggedIn,
+    path:"/500",
+    isAuthenticated:req.session.isLoggedIn
+  });
 });
 
 mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true})

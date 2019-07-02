@@ -134,7 +134,7 @@ exports.postAddProduct =  (req, res, next)=>{
   .then(result => {
     //console.log(result)
     console.log('created product');
-    res.redirect('/');
+    res.redirect('/admin/products');
   })
   .catch(err => {
     const error = new Error(err);
@@ -145,10 +145,7 @@ exports.postAddProduct =  (req, res, next)=>{
 }
 
 exports.getProducts = (req,res,next)=>{
-  // console.log(req.user);
   Product.find({userId:req.user._id})
-  // .select('title price -_id')// select which content you want to retreive
-  // .populate('userId', 'name') // retrieve/populate data through the ObjectID/reference
   .then(products => {
     // console.log(products);
     res.render('admin/products', {
