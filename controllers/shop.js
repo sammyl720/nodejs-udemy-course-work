@@ -95,7 +95,7 @@ exports.postCartDeleteProduct = (req,res,next)=>{
   const prodId = req.body.productId;
   req.user.removeFromCart(prodId)
   .then(result => {
-    console.log(result);
+    // console.log(result);
     res.redirect('/cart');
   }).catch(err => {
     const error = new Error(err);
@@ -110,7 +110,7 @@ exports.postCart = (req,res,next) =>{
     .then(product => {
       return req.user.addToCart(product); 
     }).then(result => {
-      console.log(result);
+      // console.log(result);
       res.redirect('/cart');
     })
     .catch(err => {
