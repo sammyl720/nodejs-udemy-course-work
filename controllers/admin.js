@@ -20,7 +20,7 @@ exports.getAddProduct = (req,res,next)=>{
 exports.postEditProduct = (req,res,next)=>{
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
-  const updatedImage = req.body.imageUrl;
+  const image = req.file;
   const updatedPrice = req.body.price;
   const updatedDesc = req.body.description;
 
@@ -36,7 +36,6 @@ exports.postEditProduct = (req,res,next)=>{
       errorMessage: errors.array()[0].msg,
       product:{
         title: updatedTitle,
-        imageUrl: updatedImage,
         price: updatedPrice,
         description:updatedDesc,
         _id: req.body.productId,
@@ -54,7 +53,9 @@ exports.postEditProduct = (req,res,next)=>{
     product.title = updatedTitle;
     product.price = updatedPrice;
     product.description = updatedDesc;
-    product.imageUrl = updatedImage;
+    if(image){
+      product.imageUrl = image.path;
+    }
     return product.save().then(result => {
       console.log("updated Product");
       res.redirect('/products');
@@ -99,11 +100,27 @@ exports.getEditProduct = (req,res,next)=>{
 }
 exports.postAddProduct =  (req, res, next)=>{
   const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
+  const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
   const errors = validationResult(req);
-  console.log(errors);
+  if(!image){
+    return res.status(422).render("admin/edit-product",{
+      pageTitle: "Add Product",
+      path: '/admin/edit-product',
+      isAuthenticated: req.session.isLoggedIn,
+      editing: false,
+      hasError: true,
+      errorMessage: "attached file is not an image",
+      validationErrors: [],
+      product:{
+        title,
+        price,
+        description
+      }
+    });
+  }
+  const imageUrl = image.path;
   if(!errors.isEmpty()){
     return res.status(422).render("admin/edit-product",{
       pageTitle: "Add Product",
@@ -115,7 +132,6 @@ exports.postAddProduct =  (req, res, next)=>{
       validationErrors: errors.array(),
       product:{
         title,
-        imageUrl,
         price,
         description
       }
@@ -126,7 +142,7 @@ exports.postAddProduct =  (req, res, next)=>{
     title:title,
     price: price,
     description:description,
-    imageUrl: imageUrl,
+    imageUrl:imageUrl,
     userId: req.user
 
   });

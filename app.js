@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
 const path =require('path');
-const flash = require('connect-flash')
+const flash = require('connect-flash');
 const session = require('express-session');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
@@ -11,6 +11,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const User = require('./models/user');
 const mongoose = require('mongoose');
+const multer = require('multer');
 require('dotenv').config();
 const port = process.env.PORT || 3000;
 const app = express();
@@ -25,7 +26,24 @@ const csrfProtection = csrf();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+const fileFilter = (req,file,cb) => {
+  if(file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg"){
+    cb(null, true);
+  }else{
+    cb(null,false)
+  }
+}
+const fileStorage = multer.diskStorage({
+    destination:(req, file, cb) =>{
+      cb(null, "images")
+    },
+    filename:(req,file, cb) => {
+      cb(null, new Date().getMilliseconds().toString() + "-" + file.originalname);
+    }
+});
+
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image'));
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -37,7 +55,7 @@ app.use(session({
    store: store
   })
 );
-
+ console.log(process.argv[0]);
 
 app.use(csrfProtection);
 
