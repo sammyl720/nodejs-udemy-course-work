@@ -56,7 +56,6 @@ app.use(session({
    store: store
   })
 );
- console.log(process.argv[0]);
 
 app.use(csrfProtection);
 
