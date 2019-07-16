@@ -20,7 +20,7 @@ router.post('/add-product',
 ],
  isAuth,  adminController.postAddProduct);
 router.get('/edit-product/:prodId', isAuth, adminController.getEditProduct);
-router.post('/delete-product', isAuth, adminController.postDeleteProduct);
+
 router.post('/edit-product',
 [
   body('title', 'Title must be between 3 and a 100 characters')
@@ -34,4 +34,10 @@ router.post('/edit-product',
   .trim(),
 ],
  isAuth, adminController.postEditProduct);
+
+// router.post('/delete-product', isAuth, adminController.postDeleteProduct);
+
+
+router.delete('/product/:productId',isAuth, adminController.deleteProduct);
+
 module.exports = router;

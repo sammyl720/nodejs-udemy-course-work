@@ -47,7 +47,7 @@ exports.getProducts = (req,res,next)=>{
 exports.getProduct = (req,res,next) =>{
   
   const prodId = req.params.productId;
-  console.log(prodId);
+  // console.log(prodId);
   Product.findById(prodId)
   .then((product) => {
     res.render('shop/product-detail',{
@@ -194,7 +194,7 @@ exports.getOrders = (req,res,next) => {
   }
   Order.find({'user.userId': req.user._id})
   .then(orders => {
-    console.log(orders);
+    // console.log(orders);
     res.render('shop/orders',{
       path: "/orders",
       pageTitle: "Your Orders",
