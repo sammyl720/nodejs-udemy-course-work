@@ -3,6 +3,8 @@ const Order = require('../models/order')
 const fs = require("fs");
 const PDFDocument = require("pdfkit")
 const path = require("path");
+const ITEMS_PER_PAGE = 1;
+
 exports.getProducts = (req,res,next)=>{
   // console.log(req.user._id);
   let message = req.flash('success');
@@ -43,20 +45,37 @@ exports.getProduct = (req,res,next) =>{
 }
 
 exports.getIndex = (req,res,next)=>{
+  const page = +req.query.page || 1;
+  let totalItems;
   let message = req.flash('success');
   if(message[0]){
     message = message[0];
   }else{
     message = null;
   }
-  Product.find()
+  Product.find().countDocuments()
+  .then(numProducts => {
+    totalItems = numProducts;
+    return Product.find()
+    //skip: amount off documents to skip
+    //example (2 - 1) * 2 = skip 2 documents
+    .skip((page - 1) * ITEMS_PER_PAGE)
+    //limit: limit the amount of docs to retrieve
+    .limit(ITEMS_PER_PAGE)
+  })
   .then(products => {
     // console.log(req.session.isLoggedIn)
     res.render("shop/product-list", {
       products:products,   
       pageTitle: "Shop",
       message: message,
-      path: '/'
+      path: '/',
+      currentPage: page,
+      hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
     });
   })
   .catch(err => {
