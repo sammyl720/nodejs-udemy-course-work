@@ -15,7 +15,7 @@
                                 <span class="cart-list__item-qty">
                                     Quantity: <%= p.quantity %></span>
                                 <form action="/cart-delete-item" method="POST">
-                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <input type="hidden" value="<%= p.productId._id %>" name="productId"> <button class="btn btn-warning" type="submit">Delete</button>
                                 </form>
 
@@ -24,12 +24,13 @@
                     </ul>
                     <br>
                     <div class="centered">
-                        <form action="/create-order" method="POST">
+                        <!-- <form action="/create-order" method="POST">
                             <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
                             <button type="submit" class="btn">
                                     Order Now!
                                 </button>
-                        </form>
+                        </form> -->
+                        <a class="btn" href="/checkout">Order Now!</a>
                     </div>
                     <% }else{ %>
                         <h1> No Products in Cart </h1>

@@ -3,6 +3,8 @@ const Order = require('../models/order')
 const fs = require("fs");
 const PDFDocument = require("pdfkit")
 const path = require("path");
+require('dotenv').config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const ITEMS_PER_PAGE = 1;
 
 exports.getProducts = (req,res,next)=>{
@@ -157,11 +159,44 @@ exports.postCart = (req,res,next) =>{
     });
 }
 
-exports.postOrder = (req,res,next) => {
+exports.getCheckout = (req,res,next)=>{
   req.user
     .populate('cart.items.productId')
     .execPopulate()
     .then(user => {
+      // console.log(user.cart.items);
+      const products = user.cart.items;
+      let total = 0;
+      products.forEach(p => {
+          total += p.quantity * p.productId.price;
+      });
+      res.render('shop/checkout',{
+        path:'/checkout',
+        pageTitle: "Checkout",
+        products: products,
+        totalSum: total
+    
+      });
+    })
+    .catch(err => {
+      const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+    }); 
+}
+
+exports.postOrder = (req,res,next) => {
+  const token = req.body.stripeToken;
+  let totalSum = 0;
+  req.user
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user => {
+      
+      user.cart.items.forEach(p => {
+        totalSum += p.quantity * p.productId.price;
+      });
+      
       const products = user.cart.items.map(i => {
         return { quantity: i.quantity,productData: { ...i.productId._doc }
         }
@@ -173,15 +208,24 @@ exports.postOrder = (req,res,next) => {
         },
         products: products
       });
-      order.save();
+      return order.save();
     })
   .then(result => {
+    console.log(result);
+    const charge = stripe.charges.create({
+      amount: totalSum * 100,
+      currency:'usd',
+      description: "Demo Order",
+      source:token,
+      metadata: { order_id: result._id.toString() }
+    });
     return req.user.clearCart();
     
   }).then(() => {
     res.redirect('/orders');
   })
   .catch(err => {
+    console.log(err);
     const error = new Error(err);
     error.httpStatusCode = 500;
     return next(error);

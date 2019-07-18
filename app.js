@@ -20,6 +20,9 @@ const store = new MongoDBStore({
   collection: 'sessions'
 });
 
+const isAuth = require('./middleware/is-auth');
+const shopController = require('./controllers/shop');
+
 const csrfProtection = csrf();
 
 
@@ -57,14 +60,6 @@ app.use(session({
   })
 );
 
-app.use(csrfProtection);
-
-app.use(flash());
-app.use((req,res, next)=> {
-  res.locals.isAuthenticated = req.session.isLoggedIn; 
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
 
 app.use((req,res,next) => {
     if(!req.session.user){
@@ -83,6 +78,22 @@ app.use((req,res,next) => {
     });
 
 });
+
+app.use(flash());
+app.use((req,res, next)=> {
+  res.locals.isAuthenticated = req.session.isLoggedIn; 
+  next();
+});
+
+app.post('/create-order', isAuth,  shopController.postOrder);
+
+app.use(csrfProtection);
+
+app.use((req,res, next)=> {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 
 
 
